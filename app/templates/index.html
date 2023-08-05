@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static "css/index.css" %}">
+<title>Home</title>
+{% endblock %}
+{% block body %}
+<div class="container-fluid"style="width: 94%;">
+    <div class="intro">
+        <img src="{% static "img/mainbg.jpg" %}" style="height:60vh; width:100%; object-fit:cover" class="img-fluid" alt="...">
+        <div class="head text-center">
+            <h2>The Power of Visual Storytelling</h2>
+            <h3>Your One-Stop Shop for Visual Content</h3>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" style="width: 94%;">
+    <div class="content1">
+        <h3 class="">Stock Footage</h3>
+        <div class="dropdown ms-auto">
+            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Dropdown link
+            </a>
+          
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Treanding</a></li>
+              <li><a class="dropdown-item" href="#">Random</a></li>
+              <li><a class="dropdown-item" href="#">Last 24 hours</a></li>
+            </ul>
+        </div>    
+    </div>
+</div>    
+{% endblock %}
+
+
+    
+
+

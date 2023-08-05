@@ -5,7 +5,7 @@
 }
 
 .head{
-    color: #f00e0e;
+    color: #ffffff;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -25,7 +25,7 @@
     }
     
     .head{
-        color: #fff;
+        color: #f80000;
         position: absolute;
         top: 50%;
         left: 50%;

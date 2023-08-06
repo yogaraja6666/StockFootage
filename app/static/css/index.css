@@ -18,20 +18,6 @@
     align-items: center;
 }
 
-@media only screen and (max-width: 768px) {
-    .intro{
-
-        position: relative;
-    }
-    
-    .head{
-        color: #f80000;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-  }
   @media only screen and (max-width: 600px) {
     .intro{
 
@@ -39,7 +25,6 @@
     }
     
     .head{
-        color: #f800cf;
         position: absolute;
         top: 50%;
         left: 50%;

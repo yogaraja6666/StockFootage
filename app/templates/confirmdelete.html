@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block head %}
+    <title>Upload Image</title>
+{% endblock %}
+{% block body %}
+    <div class="container col-5 " style="margin-top: 80px">
+        <h2 class="text-center">Confirm Deletion</h2>
+        <p  class="text-center">Are you sure you want to delete this image?</p>
+            <img src="{{ image.image.url }}" width="100%" height="100%" alt="Uploaded Image">
+        <div style="display:flex; align-items: center; justify-content: center">  
+            <form method="post">
+                {% csrf_token %}
+                <button class="btn btn-danger" style="margin-top: 20px;" type="submit">Delete</button>
+            </form>
+        </div>  
+    </div>
+{% endblock %}

@@ -1,13 +1,15 @@
-{% extends 'base.html' %}
+{% extends 'confirmdelete.html' %}
 {% block head %}
     <title>Upload Image</title>
 {% endblock %}
 {% block body %}
-<div class="container col-5" style="margin-top: 80px">
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn btn-primary" type="submit">Upload Image</button>
-    </form>     
+<div class="container col-5" style="margin-top: 150px">
+        <h2 class="text-center">Upload Image</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form.as_p}}
+            <br>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>    
 </div>
 {% endblock %}

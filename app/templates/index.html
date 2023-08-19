@@ -1,82 +1,210 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block head %}
-<link rel="stylesheet" href="{% static "/css/index.css" %}">
-<title>Home</title>
-<style> 
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <title>Stock Footage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <style>
+      .search-container {
+          position: relative;
+          width: 700px;
+      }
 
-  .intro{
+      .search-input {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 16px;
+      }
 
-    position: relative;
-}
+      .suggestions {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          border: 1px solid #ccc;
+          border-top: none;
+          border-radius: 0 0 5px 5px;
+          background-color: white;
+          display: none;
+      }
 
-.head{
-    color: #ffffff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
+      .suggestion {
+          padding: 10px;
+          cursor: pointer;
+          transition: background-color 0.2s;
+      }
 
-.content1{
-    margin-top: 5px !important;
-    display: flex;
-    align-items: center;
-}
+      .suggestion:hover {
+          background-color: #f2f2f2;
+      }
+  </style>
+  </head>
+  <body>
+    <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid" style="width: 94%;" >
+          <a class="navbar-brand" href="{% url 'home' %}">Stock Footage</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-center " id="navbarSupportedContent">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+              <li class="nav-item">
+                <div class="search-container">
+                  <input type="text" class="search-input" id="search-input" placeholder="Search for images or videos">
+                  <div class="suggestions" id="suggestions">
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Explore
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Blog</a></li>
+                  <li><a class="dropdown-item" href="#">About us</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                {% if request.user.is_authenticated %}
+                <a class="nav-link" href="{% url 'uploadimage' %}">Upload</a>
+                {% else %}
+                <a class="nav-link" href="{% url 'login' %}">Upload</a>
+                {% endif %}
+              </li>
+              {% if request.user.is_authenticated %}
+                  <ul class="navbar-nav">
+                      <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          {{ request.user.first_name}} {{request.user.last_name }}
+                        </a>
+                          <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="">Profile</a></li>
+                              <li><a class="dropdown-item" href="{% url 'posts' %}">Posts</a></li>
+                              <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                          </ul>
+                      </li>
+                  </ul>
+              {% else %}      
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                  </li>
+              {% endif %}      
+            </ul>
+          </div>
 
-  @media only screen and (max-width: 600px) {
-    .intro{
+      </div>
+    </nav>
 
-        position: relative;
-    }
-    
-    .head{
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-  }
 
-  
-  
-</style>
-{% endblock %}
-{% block body %}
-<div class="container-fluid"style="width: 94%;">
-    <div class="intro">
-        <img src="https://images.pexels.com/photos/8797307/pexels-photo-8797307.jpeg" style="height:60vh; width:100%; object-fit:cover" class="img-fluid" alt="...">
-        <div class="head text-center">
-            <h2>The Power of Visual Storytelling</h2>
-            <h3>Your One-Stop Shop for Visual Content</h3>
+
+
+
+    <br><br><br>
+    <div class="container-fluid"style="width: 94%;">
+        <div class="intro">
+            <img src="https://images.pexels.com/photos/8797307/pexels-photo-8797307.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" style="height:60vh; width:100%; object-fit:cover" alt="...">
+            <div class="head text-center">
+                <h2>The Power of Visual Storytelling</h2>
+                <h3>Your One-Stop Shop for Visual Content</h3>
+            </div>
         </div>
     </div>
-</div>
-<div class="container-fluid" style="width: 94%;">
-    <div class="content1">
-        <h3 class="">Stock Footage</h3>
-        <div class="dropdown ms-auto">
-            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Dropdown link
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Treanding</a></li>
-              <li><a class="dropdown-item" href="#">Random</a></li>
-              <li><a class="dropdown-item" href="#">Last 24 hours</a></li>
-            </ul>
-        </div>    
+    <div class="container-fluid" style="width: 94%; margin-top:10px; margin-bottom:10px;">
+        <div class="content1">
+            <h3 class="">Stock Footage</h3>
+            <div class="dropdown ms-auto">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Filter
+                </a>
+                <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'home' %}?orientation=landscape">Landscape</a></li>
+                <li><a class="dropdown-item" href="{% url 'home' %}?orientation=portrait">Portrait</a></li>
+                <li><a class="dropdown-item" href="{% url 'home' %}?orientation=square">Square</a></li>
+                <li><a class="dropdown-item" href="{% url 'home' %}">Treanding</a></li>
+                </ul>
+            </div>    
+        </div>
     </div>
-</div>
-<div class="container-fluid" style="width: 94%; margin-top: 20px">
-    <div class="row">
-      {% for image in image %}
-        <div class="col-md-4">
-            <img src="{{ image.image.url }}" width="100%" height="100%" alt="Uploaded Image"> 
-      </div>
-      {% endfor %} 
+    <div class="container-fluid" style="width: 94%;">
+        <div class="row">
+            {% for column in columns %}
+            <div class="col-md-4">
+                {% for photo in column %}
+                <div class="mb-4">
+                    <img src="{{ photo.image.url }}" class="w-100 rounded" alt="{{ photo.title }}">
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
     </div>
-</div>
-{% endblock %}
+    
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var suggestKeywordsUrl = "{% url 'suggest_keywords' %}";
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="{% static 'js/index.js' %}"></script>
+    <script>
+      $(document).ready(function() {
+          const searchInput = $('#search-input');
+          const suggestionsDiv = $('#suggestions');
+
+          searchInput.on('input', function() {
+              const query = searchInput.val();
+              $.ajax({
+                  url: '{% url "suggest_keywords" %}',
+                  method: 'GET',
+                  data: { query: query },
+                  success: function(data) {
+                      const suggestions = data.suggestions;
+                      suggestionsDiv.empty();
+
+                      if (suggestions.length > 0) {
+                          suggestionsDiv.show(); // Show the suggestion list
+                          suggestions.forEach(suggestion => {
+                              const suggestionItem = $(`<div class="suggestion">${suggestion}</div>`);
+                              suggestionsDiv.append(suggestionItem);
+
+                              suggestionItem.on('click', function() {
+                                  searchInput.val(suggestion);
+                                  suggestionsDiv.hide();
+                                  window.location.href = `{% url 'home' %}?query=${suggestion}`; // Hide the suggestion list
+                              });
+                          });
+                      } else {
+                          suggestionsDiv.hide(); // Hide the suggestion list if no suggestions
+                      }
+                  },
+                  error: function(error) {
+                      console.log('Error fetching suggestions:', error);
+                  }
+              });
+          });
+      });
+  </script>
+  </body>
+</html>
 
 
     

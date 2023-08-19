@@ -15,17 +15,26 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.urls import path
+from django.urls import path,include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+
 
 urlpatterns = [
     path('', views.home, name='home'),
     path('upload/', views.upload_image, name='uploadimage'),
     path('posts/', views.posts, name='posts'),
-    path('edit/<int:image_id>/', views.edit_image, name='edit_image'),
-    path('delete/<int:image_id>/', views.delete_image, name='delete_image'),
+    path('search/', views.home, name='search'),
+    path('suggest_keywords/', views.suggest_keywords, name='suggest_keywords'),
+    path('edit/<int:post_id>/', views.edit_post, name='edit_post'),
+    path('delete/<int:post_id>/', views.delete_post, name='delete_post'),
+    path('register/', views.register, name='register'),
+    path('login/', views.loginpage, name='login'),
+    path('logout/', views.logoutpage, name='logout'),
+    path('accounts/', include('allauth.urls')),
+    
 ]
 
 if settings.DEBUG:

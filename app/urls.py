@@ -25,7 +25,7 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 urlpatterns = [
     path('', views.home, name='home'),
     path('upload/', views.upload_image, name='uploadimage'),
-    path('posts/', views.posts, name='posts'),
+    path('posts/', views.profile, name='profile'),
     path('search/', views.home, name='search'),
     path('suggest_keywords/', views.suggest_keywords, name='suggest_keywords'),
     path('edit/<int:post_id>/', views.edit_post, name='edit_post'),
@@ -34,6 +34,7 @@ urlpatterns = [
     path('login/', views.loginpage, name='login'),
     path('logout/', views.logoutpage, name='logout'),
     path('accounts/', include('allauth.urls')),
+    path('edit_profile/',views.edit_profile, name='edit_profile'),
     
 ]
 

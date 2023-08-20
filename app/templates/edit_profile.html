@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
+    <title>Edit Profile</title>
+    {% load static %}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -24,11 +25,15 @@
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ user.userprofile.profile_picture }}
+                          {% if user.profile.image %}
+                          <img class="rounded-circle account-img" src="{{ user.profile.image.url }}" alt="" style="height: 30px; width: 30px; margin-right: 5px">
+                          {% else %}
+                              <img class="rounded-circle account-img" src="{% static 'img/red.png' %}" alt=""style="height: 30px; width: 30px; margin-right: 5px">
+                          {% endif %}
+                          {{ request.user.first_name}}
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'user_profile' %}">Profile</a></li>
-                            <li><a class="dropdown-item" href="{% url 'posts' %}">Posts</a></li>
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
                             <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                         </ul>
                     </li>
@@ -47,12 +52,72 @@
       </div>
     </nav><br><br><br><br>
     <div class="container">
-        <h1>Edit Profile</h1>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Save Changes</button>
-        </form>
+      <div class="row">
+        <h2 class="text-center">Edit Profile</h2>
+        <div class="col-6">
+          <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="mb-4">
+                <label for="" class="form-label">Username</label>
+                {{Uform.username}}
+              </div>
+              <div class="mb-4">
+                <label for="" class="form-label">First name</label>
+                {{Uform.first_name}}
+              </div>
+              <div class="mb-4">
+                <label for="" class="form-label">Last name</label> 
+                {{Uform.last_name}}
+              </div>
+              <div class="mb-4">
+                <label for="" class="form-label">Email</label> 
+                {{Uform.email}}
+                
+              </div>
+              <div class="mb-4">
+                {{uform.password1}}
+                
+              </div>
+              <div class="mb-4">
+                {{Uform.password2}}
+                
+              </div>
+              <div class="mb-4">
+                {{Pform.image}}
+                
+              </div>
+              <button type="submit" class="btn btn-primary">Save</button>
+          </form>
+        </div>
+      
+        <div class="col-6">
+          {% if user.profile.image %}
+          <img class="rounded-circle account-img" src="{{ user.profile.image.url }}" alt="" style="height:200px; width: 200px; margin-right: 5px">
+          {% else %}
+          <img class="rounded-circle account-img" src="{% static 'img/red.png' %}" alt=""style="height: 200px; width: 200px; margin-right: 5px">
+          {% endif %}
+        </div>
+        <div class="container col-4">
+          {% if Uform.errors.username %}
+          <label class="text-danger">{{uform.errors.username}}</label>
+          {% endif %}
+          {% if Uform.errors.first_name %}
+          <label class="text-danger">{{Uform.errors.first_name}}</label>
+          {% endif %}
+          {% if Uform.errors.last_name %}
+          <label class="text-danger">{{Uform.errors.last_name}}</label>
+          {% endif %}
+          {% if Uform.errors.email %}
+          <label class="text-danger">{{Uform.errors.email}}</label>
+          {% endif %}
+          {% if form.errors.password1 %}
+          <label class="text-danger">{{form.errors.password1}}</label>
+          {% endif %}
+          {% if form.errors.password2 %}
+          <label class="text-danger">{{form.errors.password2 }}</label>
+          {% endif %}
+        </div>
+      </div>  
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>

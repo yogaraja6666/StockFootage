@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import ImageUploadForm, CustomUserForm
-from .models import Post
+from .forms import ImageUploadForm, CustomUserForm, UserupdateForm, ProfileupdateForm
+from .models import Post, Profile
 from django.db import models
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-
-
+from django.contrib.auth.decorators import login_required
+from django.views import generic
+from django.urls import reverse_lazy
 
 def upload_image(request):
     if request.method == 'POST':
@@ -65,8 +66,8 @@ def base(request):
 
 
 
-
-def posts(request):
+@login_required
+def profile(request):
     orientation = request.GET.get('orientation')
     user = request.user
     photo = Post.objects.filter(user=user).order_by('-uploaded_at')
@@ -77,7 +78,7 @@ def posts(request):
     if num_per_column1 <= 0:
         num_per_column1 = 1
     columns1 = [photo[i:i+num_per_column1] for i in range(0, num_photos1, num_per_column1)]
-    return render(request, 'posts.html', {'columns1': columns1})
+    return render(request, 'profile.html', {'columns1': columns1})
 
 
 def edit_post(request, post_id):
@@ -131,14 +132,31 @@ def logoutpage(request):
 def register(request):
     form = CustomUserForm()
     if request.method == 'POST':
-        form = CustomUserForm(request.POST)
+        form = CustomUserForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            profile_picture = form.cleaned_data['profile_picture']
+            if profile_picture:
+                Profile.objects.create(user=user, image=profile_picture)
             return redirect('login')
         else:
             print(form.errors)
     return render(request, 'register.html',{"form":form})
 
+def edit_profile(request):
+    if request.method == 'POST':
+        Uform = UserupdateForm(request.POST, instance=request.user)
+        Pform = ProfileupdateForm(request.POST, request.FILES, instance=request.user.profile)
+        if Uform.is_valid() and Pform.is_valid():
+            Uform.save()
+            Pform.save()
+        return redirect('profile')    
+    else:
+        Uform = UserupdateForm(instance=request.user)
+        Pform = ProfileupdateForm(instance=request.user.profile)     
+    context = {
+        'Uform': Uform,
+        'Pform': Pform
+    }       
 
-
-
+    return render(request, 'edit_profile.html', context)

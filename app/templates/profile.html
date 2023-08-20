@@ -1,0 +1,61 @@
+{% extends 'confirmdelete.html' %}
+{% block head %}
+    {% load static %}
+    <title>Posts</title>
+{% endblock %}
+{% block body %}
+<div class="container-fluid" style="width: 94%; margin-top: 80px">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-6 content-section" style="display: flex; justify-content: center; align-items: center" >
+                <div class="media" style="display: flex; justify-content: center; align-items: center">
+                    {% if user.profile.image %}
+                        <img class="rounded-circle account-img" src="{{ user.profile.image.url }}" alt="" style="height: 140px; width: 140px; object-fit: cover">
+                    {% else %}
+                        <img class="rounded-circle account-img" src="{% static 'img/red.png' %}" alt=""style="height: 140px; width: 140px">
+                    {% endif %}
+                    <div class="media-body" style="margin-left: 20px; text-align: center">
+                        <h2 class="account-heading text-center">{{ user.first_name }} {{ user.last_name }}</h2>
+                        <a class="btn btn-primary" href="{% url 'edit_profile' %}">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row text-center" style="margin-bottom: 10px; ">
+        <div class="col-md-6"> 
+            <h3 class="post">Posts</h3>
+        </div>
+        <div class="col-md-6">
+            <div class="dropdown ms-auto">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Filter
+                </a>
+                <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'profile' %}?orientation=landscape">Landscape</a></li>
+                <li><a class="dropdown-item" href="{% url 'profile' %}?orientation=portrait">Portrait</a></li>
+                <li><a class="dropdown-item" href="{% url 'profile' %}?orientation=square">Square</a></li>
+                <li><a class="dropdown-item" href="{% url 'profile' %}">Treanding</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        {% for column in columns1 %}
+        <div class="col-md-4">
+            {% for photos in column %}
+            <div class="mb-4">
+                <img src="{{ photos.image.url }}" class="w-100 rounded" alt="{{ photo.title }}">
+                <div class="div" style="display:flex; align-items: center; justify-content: center;margin-top:10px">
+                    <a style="margin-right:10px" href="{% url 'edit_post' photos.id %}" class="btn btn-primary">Edit</a>
+                    <a href="{% url 'delete_post' photos.id %}" class="btn btn-danger">Delete</a>
+                </div>    
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

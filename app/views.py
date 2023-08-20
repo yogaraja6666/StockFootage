@@ -153,10 +153,17 @@ def edit_profile(request):
         return redirect('profile')    
     else:
         Uform = UserupdateForm(instance=request.user)
-        Pform = ProfileupdateForm(instance=request.user.profile)     
+        Pform = ProfileupdateForm(instance=request.user)  
+
+    try:
+        profile = request.user.profile
+    except Profile.DoesNotExist:
+        profile = Profile(user=request.user)
+        profile.save()   
+        
     context = {
         'Uform': Uform,
         'Pform': Pform
-    }       
-
+    }
+    
     return render(request, 'edit_profile.html', context)

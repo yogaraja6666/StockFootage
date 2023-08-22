@@ -5,8 +5,8 @@ from django.db import models
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.http import Http404
+
 
 
 def upload_image(request):
@@ -56,13 +56,18 @@ def home(request):
 
 
 def download(request, photo_id):
-    photo = get_object_or_404(Post, id=photo_id)
+    try:
+        photo = Post.objects.get(id=photo_id)
+        download_link = photo.image.url  # Use the actual image URL
+    except Post.DoesNotExist:
+        raise Http404("Image not found")
+    
+    context = {
+        'photo': photo,
+        'download_link': download_link
+    }
 
-    # Logic to handle the download, e.g., generating a download link or serving the image file
-    download_link = f'/media/{photo.image}'  # Modify this to point to the actual image URL
-
-    return HttpResponse(f'Click <a href="{download_link}" download>here</a> to download the image.')
-
+    return render(request, 'download.html', context)
 
 
 '''

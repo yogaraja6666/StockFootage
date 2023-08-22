@@ -47,7 +47,7 @@
   </head>
   <body>
     <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid" style="width: 94%;" >
+      <div class="container-fluid" style="width: 94%; " >
           <a class="navbar-brand" href="{% url 'home' %}">Stock Footage</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -147,7 +147,7 @@
             <div class="col-md-4">
                 {% for photo in column %}
                 <div class="mb-4">
-                  <a href="{% url 'download' photo.id %}">
+                  <a target="_blank" href="{% url 'download' photo.id %}">
                     <img src="{{ photo.image.url }}" class="w-100 rounded" alt="{{ photo.title }}">
                   </a>  
                 </div>

@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -147,7 +147,9 @@
             <div class="col-md-4">
                 {% for photo in column %}
                 <div class="mb-4">
+                  <a href="{% url 'download' photo.id %}">
                     <img src="{{ photo.image.url }}" class="w-100 rounded" alt="{{ photo.title }}">
+                  </a>  
                 </div>
                 {% endfor %}
             </div>

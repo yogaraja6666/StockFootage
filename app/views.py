@@ -4,10 +4,10 @@ from .models import Post, Profile
 from django.db import models
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.views import generic
-from django.urls import reverse_lazy
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
+
 
 def upload_image(request):
     if request.method == 'POST':
@@ -26,29 +26,43 @@ def home(request):
     orientation = request.GET.get('orientation')
     query = request.GET.get('query')
     photos = Post.objects.order_by('-uploaded_at')
-
     if orientation:
         photos = photos.filter(orientation=orientation)
-
     if query:
-        photos = photos.filter(models.Q(title__icontains=query) | models.Q(tag__icontains=query))    
+        photos = photos.filter(models.Q(title__icontains=query) | models.Q(tag__icontains=query))  
+    else:
+        print("error 1")      
   
-        
     # Split the photos into three columns
     num_photos = len(photos)
-
     if num_photos == 0:
         return render(request, 'noresult.html')
-        
+    
+    else:
+        print("error 2") 
+    
     num_per_column = (num_photos + 2) // 3  # Distribute photos evenly
     columns = [photos[i:i+num_per_column] for i in range(0, num_photos, num_per_column)]
-    
     postdata = Post.objects.all()
+
     if request.method =='GET':
         st=request.GET.get('Postname')
         if st!=None:
             postdata = Post.objects.filter(title__icontains=st)
-    return render(request, 'index.html', {'columns': columns,'postdata':postdata})
+    else:
+        print("error 3")         
+
+    return render(request, "index.html", {'columns': columns,'postdata':postdata})
+
+
+def download(request, photo_id):
+    photo = get_object_or_404(Post, id=photo_id)
+
+    # Logic to handle the download, e.g., generating a download link or serving the image file
+    download_link = f'/media/{photo.image}'  # Modify this to point to the actual image URL
+
+    return HttpResponse(f'Click <a href="{download_link}" download>here</a> to download the image.')
+
 
 
 '''
@@ -109,6 +123,7 @@ def suggest_keywords(request):
         suggestions = []
     return JsonResponse({'suggestions': suggestions})
 
+
 def loginpage(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -122,6 +137,7 @@ def loginpage(request):
             print("login failed")
             return redirect('login')
     return render(request,'login.html')
+
 
 def logoutpage(request):
     if request.user.is_authenticated:

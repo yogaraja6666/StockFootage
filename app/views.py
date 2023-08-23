@@ -26,10 +26,12 @@ def home(request):
     orientation = request.GET.get('orientation')
     query = request.GET.get('query')
     photos = Post.objects.order_by('-uploaded_at')
+    
     if orientation:
         photos = photos.filter(orientation=orientation)
+    
     if query:
-        photos = photos.filter(models.Q(title__icontains=query) | models.Q(tag__icontains=query))  
+        photos = photos.filter(models.Q(title__icontains=query) | models.Q(tag__icontains=query))
     else:
         print("error 1")      
   

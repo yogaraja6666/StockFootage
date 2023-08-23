@@ -21,9 +21,12 @@
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
                 <div class="search-container">
-                  <input type="text" class="search-input" id="search-input" placeholder="Search for images or videos">
-                  <div class="suggestions" id="suggestions">
-                  </div>
+                  <form id="search-form" action="{% url 'home' %}" method="get">
+                    <input type="text" class="search-input" id="search-input" name="query" placeholder="Search for images or videos">
+                    <div class="suggestions" id="suggestions">
+                    </div>
+                  </form>
+                  
                 </div>
               </li>
               <li class="nav-item">
@@ -125,44 +128,57 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="{% static 'js/index.js' %}"></script>
+
+
     <script>
       $(document).ready(function() {
-          const searchInput = $('#search-input');
-          const suggestionsDiv = $('#suggestions');
-
-          searchInput.on('input', function() {
-              const query = searchInput.val();
-              $.ajax({
-                  url: '{% url "suggest_keywords" %}',
-                  method: 'GET',
-                  data: { query: query },
-                  success: function(data) {
-                      const suggestions = data.suggestions;
-                      suggestionsDiv.empty();
-
-                      if (suggestions.length > 0) {
-                          suggestionsDiv.show(); // Show the suggestion list
-                          suggestions.forEach(suggestion => {
-                              const suggestionItem = $(`<div class="suggestion">${suggestion}</div>`);
-                              suggestionsDiv.append(suggestionItem);
-
-                              suggestionItem.on('click', function() {
-                                  searchInput.val(suggestion);
-                                  suggestionsDiv.hide();
-                                  window.location.href = `{% url 'home' %}?query=${suggestion}`; // Hide the suggestion list
-                              });
-                          });
-                      } else {
-                          suggestionsDiv.hide(); // Hide the suggestion list if no suggestions
-                      }
-                  },
-                  error: function(error) {
-                      console.log('Error fetching suggestions:', error);
+        const searchInput = $('#search-input');
+        const suggestionsDiv = $('#suggestions');
+      
+        let suggestionsSet = new Set(); // To store unique suggestions
+      
+        searchInput.on('input', function() {
+          const query = searchInput.val();
+      
+          $.ajax({
+            url: '{% url "suggest_keywords" %}',
+            method: 'GET',
+            data: { query: query },
+            success: function(data) {
+              const suggestions = data.suggestions;
+              suggestionsDiv.empty();
+      
+              if (suggestions.length > 0) {
+                suggestionsDiv.show();
+                suggestions.forEach(suggestion => {
+                  if (!suggestionsSet.has(suggestion)) {
+                    suggestionsSet.add(suggestion);
+                    const suggestionItem = $(`<div class="suggestion">${suggestion}</div>`);
+                    suggestionsDiv.append(suggestionItem);
+      
+                    suggestionItem.on('click', function() {
+                      searchInput.val(suggestion);
+                      $('#search-form').submit(); // Submit the form
+                    });
                   }
-              });
+                });
+              } else {
+                suggestionsDiv.hide();
+              }
+            },
+            error: function(error) {
+              console.log('Error fetching suggestions:', error);
+            }
           });
+        });
       });
-  </script>
+      
+      
+      
+      </script>
+      
+
+
   </body>
 </html>
 

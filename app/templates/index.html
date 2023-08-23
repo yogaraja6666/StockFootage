@@ -22,10 +22,11 @@
               <li class="nav-item">
                 <div class="search-container">
                   <form id="search-form" action="{% url 'home' %}" method="get">
-                    <input type="text" class="search-input" id="search-input" name="query" placeholder="Search for images or videos">
-                    <div class="suggestions" id="suggestions">
-                    </div>
-                  </form>
+                  <input type="text" class="search-input" id="search-input" name="query" placeholder="Search for images or videos">
+                  <input type="hidden" id="selected-suggestion" name="selected_suggestion">
+                  <div class="suggestions" id="suggestions">
+                  </div>
+                </form>
                   
                 </div>
               </li>
@@ -99,7 +100,7 @@
                 <li><a class="dropdown-item" href="{% url 'home' %}?orientation=landscape">Landscape</a></li>
                 <li><a class="dropdown-item" href="{% url 'home' %}?orientation=portrait">Portrait</a></li>
                 <li><a class="dropdown-item" href="{% url 'home' %}?orientation=square">Square</a></li>
-                <li><a class="dropdown-item" href="{% url 'home' %}">Treanding</a></li>
+                <li><a class="dropdown-item" href="{% url 'home' %}">All</a></li>
                 </ul>
             </div>    
         </div>
@@ -131,54 +132,51 @@
 
 
     <script>
-      $(document).ready(function() {
-        const searchInput = $('#search-input');
-        const suggestionsDiv = $('#suggestions');
-      
-        let suggestionsSet = new Set(); // To store unique suggestions
-      
-        searchInput.on('input', function() {
-          const query = searchInput.val();
-      
-          $.ajax({
-            url: '{% url "suggest_keywords" %}',
-            method: 'GET',
-            data: { query: query },
-            success: function(data) {
-              const suggestions = data.suggestions;
-              suggestionsDiv.empty();
-      
-              if (suggestions.length > 0) {
-                suggestionsDiv.show();
-                suggestions.forEach(suggestion => {
-                  if (!suggestionsSet.has(suggestion)) {
-                    suggestionsSet.add(suggestion);
-                    const suggestionItem = $(`<div class="suggestion">${suggestion}</div>`);
-                    suggestionsDiv.append(suggestionItem);
-      
-                    suggestionItem.on('click', function() {
-                      searchInput.val(suggestion);
-                      $('#search-form').submit(); // Submit the form
-                    });
-                  }
-                });
-              } else {
-                suggestionsDiv.hide();
-              }
-            },
-            error: function(error) {
-              console.log('Error fetching suggestions:', error);
+$(document).ready(function() {
+  const searchInput = $('#search-input');
+  const suggestionsDiv = $('#suggestions');
+
+  let suggestionsSet = new Set(); // To store unique suggestions
+
+  searchInput.on('input', function() {
+    const query = searchInput.val();
+
+    $.ajax({
+      url: '{% url "suggest_keywords" %}',
+      method: 'GET',
+      data: { query: query },
+      success: function(data) {
+        const suggestions = data.suggestions;
+        suggestionsDiv.empty();
+
+        if (suggestions.length > 0) {
+          suggestionsDiv.show();
+          suggestions.forEach(suggestion => {
+            if (!suggestionsSet.has(suggestion)) {
+              suggestionsSet.add(suggestion);
+              const suggestionItem = $(`<div class="suggestion">${suggestion}</div>`);
+              suggestionsDiv.append(suggestionItem);
+
+              suggestionItem.on('click', function() {
+                searchInput.val(suggestion); // Set the input value
+                suggestionsDiv.empty(); // Clear suggestions
+                $('#selected-suggestion').val(suggestion); // Set the value of the hidden input
+                $('#search-form').submit(); // Submit the form
+              });
             }
           });
-        });
-      });
-      
-      
-      
+        } else {
+          suggestionsDiv.hide();
+        }
+      },
+      error: function(error) {
+        console.log('Error fetching suggestions:', error);
+      }
+    });
+  });
+});
       </script>
       
-
-
   </body>
 </html>
 

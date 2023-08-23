@@ -1,9 +1,12 @@
 {% extends 'confirmdelete.html' %}
 {% block head %}
+{% load static %}
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/editimage.css' %}">
     <title>Edit</title>
 {% endblock %}
 {% block body %}
-<div class="container col-5" style="margin-top: 80px">
+<div class="container col-4" style="margin-top: 80px">
     <h2 class="text-center">Edit Post</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}

@@ -1,9 +1,12 @@
 {% extends 'confirmdelete.html' %}
 {% block head %}
+{% load static %}
     <title>Upload Image</title>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/uploadimage.css' %}">
 {% endblock %}
 {% block body %}
-<div class="container col-5" style="margin-top: 150px">
+<div class="container col-5" style="margin-top: 100px">
         <h2 class="text-center">Upload Image</h2>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}

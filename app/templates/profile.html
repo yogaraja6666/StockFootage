@@ -25,8 +25,10 @@
         </div>
     </div>
     <br>
+
+    {% if columns1 %}
+    <h3 class="text-center">Posts</h3>
     <div class="container" style="margin-bottom: 10px;margin-top:20px;height:100px ">
-        <h3 class="text-center">Posts</h3>
         <div class="text-end" style="display:flex; align-items: center; justify-content: center">
             <div class="dropdown ms-auto">
                 <a style="background-color: white; color: black; font-size:18px;" class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -56,6 +58,12 @@
         </div>
         {% endfor %}
     </div>
+    {% else %}
+    <div class="row" style="margin-top: 150px">
+        <div class="col-md-12 text-center">
+            <h4>{{ user.first_name }} {{ user.last_name }} has no photos yet</h4>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
-
